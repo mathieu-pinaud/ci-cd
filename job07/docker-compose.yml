@@ -1,0 +1,21 @@
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx_server
+    ports:
+      - "8080:80"  # Expose le port 80 de Nginx sur le port 8080 de la machine hôte
+    volumes:
+      - shared_volume:/usr/share/nginx/html
+
+  ftp:
+    image: delfer/alpine-ftp-server  # Utilise une image FTP légère basée sur Alpine Linux
+    container_name: ftp_server
+    environment:
+      - USERS=user|password|1000  # Définit un utilisateur FTP avec identifiants
+    ports:
+      - "2121:21"  # Expose le port 21 de FTP sur le port 2121 de la machine hôte
+    volumes:
+      - shared_volume:/home/user
+
+volumes:
+  shared_volume:
