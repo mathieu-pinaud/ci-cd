@@ -1,0 +1,4 @@
+lo               UNKNOWN        127.0.0.1/8 
+enp0s3           UP             10.0.2.15/24 
+docker0          DOWN           172.17.0.1/16 
+br-1c7b2c6cf3c0  UP             172.18.0.1/16 
