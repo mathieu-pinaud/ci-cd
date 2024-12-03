@@ -1,21 +1,31 @@
+version: '3.8'
+
 services:
   nginx:
     image: nginx:latest
     container_name: nginx_server
     ports:
-      - "8080:80"  # Expose le port 80 de Nginx sur le port 8080 de la machine hôte
+      - "8080:80" # Redirige le port 80 du conteneur vers le port 8080 de l’hôte
     volumes:
-      - shared_volume:/usr/share/nginx/html
+      - shared_volume:/usr/share/nginx/html # Volume partagé pour les fichiers web
 
   ftp:
-    image: delfer/alpine-ftp-server  # Utilise une image FTP légère basée sur Alpine Linux
+    image: fauria/vsftpd:latest
     container_name: ftp_server
     environment:
-      - USERS=user|password|1000  # Définit un utilisateur FTP avec identifiants
+      - FTP_USER=myuser        # Nom d'utilisateur FTP
+      - FTP_PASS=mypassword    # Mot de passe FTP
+      - PASV_ENABLE=YES        # Mode passif activé
+      - PASV_MIN_PORT=21100    # Plage de ports pour le mode passif
+      - PASV_MAX_PORT=21110
+      - FILE_OPEN_MODE=0777    # Permissions pour les fichiers
+      - LOCAL_UMASK=022
     ports:
-      - "2121:21"  # Expose le port 21 de FTP sur le port 2121 de la machine hôte
+      - "21:21" # Port FTP standard
+      - "21100-21110:21100-21110" # Plage de ports pour le mode passif
     volumes:
-      - shared_volume:/home/user
+      - shared_volume:/home/vsftpd/myuser # Volume partagé pour accéder aux fichiers
 
 volumes:
   shared_volume:
+    driver: local
